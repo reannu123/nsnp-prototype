@@ -60,10 +60,10 @@ function getFunctions(m, active) {
   return functions;
 }
 
-function selectOne(possible) {
+function selectOne(guidedMode, possible) {
   let n = possible.n;
   let active = possible.active;
-  let guided = false;
+  let guided = guidedMode;
   for (let i = 0; i < n.length; i++) {
     if (n[i] > 1) {
       // console.log("Neuron ", i + 1, " has ", n[i], " active functions");
@@ -78,16 +78,24 @@ function selectOne(possible) {
       };
       let activeFunctions = getActiveFunctions();
       // console.log("Functions: ", activeFunctions);
+      let selected;
       if (!guided) {
         // Randomize which function will be selected
         let random = Math.floor(Math.random() * activeFunctions.length);
-        let selected = activeFunctions[random];
+        selected = activeFunctions[random];
         // console.log("Selected Function: ", selected);
-        for (let j = 0; j < active.length; j++) {
-          if (activeFunctions.includes(j) && j != selected) {
-            active[j][i] = 0;
-            n[i] -= 1;
-          }
+      } else {
+        let answer = prompt(
+          "Select a function for neuron " + (i + 1) + " from " + activeFunctions
+        );
+
+        console.log("Selected Function: ", answer);
+        selected = parseInt(answer);
+      }
+      for (let j = 0; j < active.length; j++) {
+        if (activeFunctions.includes(j) && j != selected) {
+          active[j][i] = 0;
+          n[i] -= 1;
         }
       }
     }
@@ -95,9 +103,9 @@ function selectOne(possible) {
   return { n, active };
 }
 
-export function generateSM(C, L, F, T) {
+export function generateSM(C, L, F, T, guidedMode) {
   let possible = computePossible(C, L, T, F);
-  let selected = selectOne(possible);
+  let selected = selectOne(guidedMode, possible);
 
   let n = selected.n; // Number of functions
   let active = selected.active;
@@ -116,6 +124,7 @@ export function generateSM(C, L, F, T) {
   // for each neuron m find the number of possible spiking vectors
   for (let m = 0; m < L[0].length; m++) {
     let functions = getFunctions(m, active);
+    console.log("Functions: ", functions);
 
     // For each neuron, if the number of functions is 0, then set all the values of the spiking vector to 0
     if (n[m] == 0) {

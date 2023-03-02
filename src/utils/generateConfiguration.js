@@ -67,7 +67,16 @@ function checkActiveVars(S, F) {
 
 // Algorithm 3: Computation Graph
 // Generates computation graph from a given initial configuration
-export default function generateConfigurations(C, maxDepth, L, F, T, VL, syn) {
+export default function generateConfigurations(
+  guidedMode,
+  C,
+  maxDepth,
+  L,
+  F,
+  T,
+  VL,
+  syn
+) {
   let unexploredStates = C;
   let exploredStates = [];
   // let graph = require("./graphType");
@@ -90,7 +99,7 @@ export default function generateConfigurations(C, maxDepth, L, F, T, VL, syn) {
       // }
 
       // console.log("Unexplored State: ", unexploredStates[i]);
-      S = generateSM(unexploredStates[i], L, F, T);
+      S = generateSM(unexploredStates[i], L, F, T, guidedMode);
       // S = S_debug;
       P = generatePM(unexploredStates[i], F, L, VL, syn, T);
       let V = checkActiveVars(S, F);
