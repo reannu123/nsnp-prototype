@@ -96,7 +96,7 @@ function Simulation() {
 
   function handleVarLocListChange() {
     if (inputVarLocList != "") {
-      let matrixForm = inputVarLocList;
+      let matrixForm = "[" + inputVarLocList + "]";
       setVL(JSON.parse(matrixForm));
     }
   }
