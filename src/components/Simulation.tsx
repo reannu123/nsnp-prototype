@@ -63,6 +63,7 @@ function Simulation() {
     if (inputConfig != "") {
       let matrixForm = "[[" + inputConfig + "]]";
       setC(JSON.parse(matrixForm));
+      setInputConfig("");
     }
   }
 
@@ -70,6 +71,7 @@ function Simulation() {
     if (inputFunction != "") {
       let matrixForm = "[" + inputFunction + "]";
       setF(JSON.parse(matrixForm));
+      setInputFunction("");
     }
   }
 
@@ -77,6 +79,7 @@ function Simulation() {
     if (inputFunctionLocation != "") {
       let matrixForm = "[" + inputFunctionLocation + "]";
       setL(JSON.parse(matrixForm));
+      setInputFunctionLocation("");
     }
   }
 
@@ -84,6 +87,7 @@ function Simulation() {
     if (inputSynapseList != "") {
       let matrixForm = "[" + inputSynapseList + "]";
       setSyn(JSON.parse(matrixForm));
+      setInputSynapseList("");
     }
   }
 
@@ -91,6 +95,7 @@ function Simulation() {
     if (inputThresholdList != "") {
       let matrixForm = "[" + inputThresholdList + "]";
       setT(JSON.parse(matrixForm));
+      setInputThresholdList("");
     }
   }
 
@@ -98,6 +103,7 @@ function Simulation() {
     if (inputVarLocList != "") {
       let matrixForm = "[" + inputVarLocList + "]";
       setVL(JSON.parse(matrixForm));
+      setInputVarLocList("");
     }
   }
 
