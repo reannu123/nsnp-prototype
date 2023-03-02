@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect } from "react";
 import { useState } from "react";
 import "./Simulation.css";
@@ -17,9 +18,9 @@ function Simulation() {
   const [guidedMode, setGuidedMode] = useState(false);
 
   // States for the History
-  const [CHist, setCHist] = useState([]);
-  const [SHist, setSHist] = useState([]);
-  const [PHist, setPHist] = useState([]);
+  const [CHist, setCHist] = useState<number[][]>([]);
+  const [SHist, setSHist] = useState<number[][][]>([]);
+  const [PHist, setPHist] = useState<number[][][]>([]);
 
   // States for the Matrices
   const [C, setC] = useState([1, 1, 2]);
@@ -41,8 +42,8 @@ function Simulation() {
     [1, 2],
     [2, 1],
   ]);
-  const [SV, setSV] = useState([[]]);
-  const [PM, setPM] = useState([[]]);
+  const [SV, setSV] = useState<number[][]>([[]]);
+  const [PM, setPM] = useState<number[][]>([[]]);
 
   //States for Viewing components
   const [showNonSimMatrices, setShowNonSimMatrices] = useState(true);
@@ -117,7 +118,7 @@ function Simulation() {
     }
   }
 
-  function handleGuidedMode(e) {
+  function handleGuidedMode(e: any) {
     console.log(e.target.checked);
     if (e.target.checked) {
       setGuidedMode(true);
@@ -146,7 +147,7 @@ function Simulation() {
           <h3>Configuration History</h3>
           <div className="Column">
             {CHist.map((c) => (
-              <div className="C" key={c}>
+              <div className="C" key={c[0]}>
                 <MathComponent tex={matrixToString([c])} />
               </div>
             ))}
