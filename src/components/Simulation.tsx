@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import "./Simulation.css";
 import { MathComponent } from "mathjax-react";
+import generateConfigurations from "../utils/generateConfiguration.js";
 
 function Simulation() {
   // States for the Input Fields
@@ -183,6 +184,9 @@ function Simulation() {
           </div>
         </div>
       </div>
+      <button
+        onClick={() => setC([generateConfigurations(C, 1, L, F, T, VL, syn)])}
+      />
     </div>
   );
 }

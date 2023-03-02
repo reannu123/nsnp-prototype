@@ -1,5 +1,5 @@
 // Checks for configuration C if function i from F has a threshold T that is met
-function checkThreshold(C, i, T, F) {
+export function checkThreshold(C, i, T, F) {
   // Check if i is in Threshold functions
   for (let j = 0; j < T.length; j++) {
     if (T[j][0] == i + 1) {
@@ -25,7 +25,7 @@ function checkThreshold(C, i, T, F) {
   return true;
 }
 
-function arrayEquals(a, b) {
+export function arrayEquals(a, b) {
   return (
     Array.isArray(a) &&
     Array.isArray(b) &&
@@ -33,5 +33,3 @@ function arrayEquals(a, b) {
     a.every((val, index) => val === b[index])
   );
 }
-
-module.exports = { checkThreshold, arrayEquals };

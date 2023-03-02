@@ -1,4 +1,4 @@
-const checkThreshold = require("./universal").checkThreshold;
+import { checkThreshold } from "./universal";
 // Using the Function location L, get the location of function i
 function getNeuronFromFunction(i, L) {
   for (let j = 0; j < L[i].length; j++) {
@@ -19,7 +19,7 @@ function arrayEquals(a, b) {
 
 // Algorithm 2: Production Matrix
 // consists of the effects of each function in changing of variable values
-function generatePM(C, F, L, VL, syn, T) {
+export function generatePM(C, F, L, VL, syn, T) {
   let P = [];
   for (let i = 0; i < F.length; i++) {
     P.push([]);
@@ -49,5 +49,3 @@ function generatePM(C, F, L, VL, syn, T) {
   }
   return P;
 }
-
-module.exports = { generatePM };

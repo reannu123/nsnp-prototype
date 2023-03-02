@@ -1,7 +1,8 @@
 // Algorithm 1: Spiking Matrix
 // Consists of vectors containing functions that will spike
 // Helper Functions
-const universal = require("./universal");
+import { checkThreshold } from "./universal";
+
 function computeCombination(n) {
   let combination = 1;
   for (let i = 0; i < n.length; i++) {
@@ -36,7 +37,7 @@ function computePossible(C, L, T, F) {
     for (let i = 0; i < L.length; i++) {
       // make sure the function is in the neuron
       if (L[i][j] == 1) {
-        if (universal.checkThreshold(C, i, T, F)) {
+        if (checkThreshold(C, i, T, F)) {
           active[i][j] = 1;
           count += 1;
         } else {
@@ -65,7 +66,7 @@ function selectOne(possible) {
   let guided = false;
   for (let i = 0; i < n.length; i++) {
     if (n[i] > 1) {
-      console.log("Neuron ", i + 1, " has ", n[i], " active functions");
+      // console.log("Neuron ", i + 1, " has ", n[i], " active functions");
       let getActiveFunctions = () => {
         let f = [];
         for (let j = 0; j < active.length; j++) {
@@ -76,12 +77,12 @@ function selectOne(possible) {
         return f;
       };
       let activeFunctions = getActiveFunctions();
-      console.log("Functions: ", activeFunctions);
+      // console.log("Functions: ", activeFunctions);
       if (!guided) {
         // Randomize which function will be selected
         let random = Math.floor(Math.random() * activeFunctions.length);
         let selected = activeFunctions[random];
-        console.log("Selected Function: ", selected);
+        // console.log("Selected Function: ", selected);
         for (let j = 0; j < active.length; j++) {
           if (activeFunctions.includes(j) && j != selected) {
             active[j][i] = 0;
@@ -94,7 +95,7 @@ function selectOne(possible) {
   return { n, active };
 }
 
-function generateSM(C, L, F, T) {
+export function generateSM(C, L, F, T) {
   let possible = computePossible(C, L, T, F);
   let selected = selectOne(possible);
 
@@ -102,7 +103,7 @@ function generateSM(C, L, F, T) {
   let active = selected.active;
   let q = computeCombination(n, L, T); // Number of spiking vectors
 
-  console.log("Final selected: ", active);
+  // console.log("Final selected: ", active);
   // Initialize matrix spiking matrix with size of combination x n
   let S = [];
   for (let i = 0; i < q; i++) {
@@ -145,5 +146,3 @@ function generateSM(C, L, F, T) {
   }
   return S;
 }
-
-module.exports = { generateSM };

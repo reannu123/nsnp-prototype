@@ -1,3 +1,7 @@
+import { arrayEquals } from "./universal";
+import { generateSM } from "./generateSV";
+import { generatePM } from "./generatePM";
+
 // Hard-coded Spiking Matrix
 let S_debug = [
   [1, 0, 1, 0],
@@ -63,10 +67,10 @@ function checkActiveVars(S, F) {
 
 // Algorithm 3: Computation Graph
 // Generates computation graph from a given initial configuration
-function generateConfigurations(C, maxDepth, L, F, T, VL, syn) {
+export default function generateConfigurations(C, maxDepth, L, F, T, VL, syn) {
   let unexploredStates = C;
   let exploredStates = [];
-  let graph = require("./graphType");
+  // let graph = require("./graphType");
   // let currentNode = new graph.Node(C[0]);
   // let rootNode = currentNode;
   // let computationHistory = new graph.Graph(currentNode);
@@ -84,16 +88,9 @@ function generateConfigurations(C, maxDepth, L, F, T, VL, syn) {
       // }
 
       // console.log("Unexplored State: ", unexploredStates[i]);
-      let S = require("./generateSV").generateSM(unexploredStates[i], L, F, T);
+      let S = generateSM(unexploredStates[i], L, F, T);
       // S = S_debug;
-      let P = require("./generatePM").generatePM(
-        unexploredStates[i],
-        F,
-        L,
-        VL,
-        syn,
-        T
-      );
+      let P = generatePM(unexploredStates[i], F, L, VL, syn, T);
       let V = checkActiveVars(S, F);
       let NG = multiplyMatrix(S, P);
       let C_next = addMatrix(V, NG);
@@ -101,14 +98,8 @@ function generateConfigurations(C, maxDepth, L, F, T, VL, syn) {
       for (let j = 0; j < C_next.length; j++) {
         // For each configuration in C_next, check if it is already in ExploredStates
         // If it is not, add it to the nextstates array
-        if (
-          !exploredStates.find((x) =>
-            require("./universal").arrayEquals(x, C_next[j])
-          )
-        ) {
+        if (!exploredStates.find((x) => arrayEquals(x, C_next[j]))) {
           nextstates.push(C_next[j]);
-        } else {
-          console.log("ALREADY EXPLORED: ", C_next[j]);
         }
 
         // currentNode.addChild(new graph.Node(C_next[j]));
@@ -125,13 +116,6 @@ function generateConfigurations(C, maxDepth, L, F, T, VL, syn) {
     unexploredStates.push(...nextstates);
     // graph.printGraph(computationHistory);
     depth++;
-    console.log("Explored States: ", exploredStates);
-    console.log("Unexplored States: ", unexploredStates);
-    console.log("Depth: ", depth);
   }
-  return exploredStates;
+  return unexploredStates[0];
 }
-
-module.exports = {
-  generateConfigurations,
-};
