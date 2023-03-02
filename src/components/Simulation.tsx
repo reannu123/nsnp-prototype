@@ -33,6 +33,12 @@ function Simulation() {
     [1, 2],
     [2, 1],
   ]);
+  const [SV, setSV] = useState([[]]);
+  const [PM, setPM] = useState([[]]);
+
+  //States for Viewing components
+  const [showNonSimMatrices, setShowNonSimMatrices] = useState(true);
+  const [showSPMatrices, setShowSPMatrices] = useState(false);
 
   // Convert Matrix to Latex string
   function matrixToString(matrix: number[][]) {
@@ -97,96 +103,139 @@ function Simulation() {
 
   return (
     <div className="Column">
+      {showNonSimMatrices && (
+        <div className="Row">
+          <div className="C">
+            <div className="matrix configuration">
+              <h2>Function Matrix</h2>
+              <MathComponent tex={matrixToString(F)} />
+            </div>
+            <div className="Row">
+              <input
+                className="input"
+                onChange={(e) => setInputFunction(e.target.value)}
+              />
+              <button onClick={handleFunctionChange}>Set</button>
+            </div>
+          </div>
+
+          <div className="C">
+            <div className="matrix configuration">
+              <h2>Function Location Matrix</h2>
+              <MathComponent tex={matrixToString(L)} />
+            </div>
+            <div className="Row">
+              <input
+                className="input"
+                onChange={(e) => setInputFunctionLocation(e.target.value)}
+              />
+              <button onClick={handleFunctionLocationChange}>Set</button>
+            </div>
+          </div>
+          <div className="C">
+            <div className="matrix configuration">
+              <h2>Synapse List</h2>
+              <MathComponent tex={matrixToString(syn)} />
+            </div>
+            <div className="Row">
+              <input
+                className="input"
+                onChange={(e) => setInputSynapseList(e.target.value)}
+              />
+              <button onClick={handleSynapseListChange}>Set</button>
+            </div>
+          </div>
+
+          <div className="C">
+            <div className="matrix configuration">
+              <h2>Threshold List</h2>
+              <MathComponent tex={matrixToString(T)} />
+            </div>
+            <div className="Row">
+              <input
+                className="input"
+                onChange={(e) => setInputThresholdList(e.target.value)}
+              />
+              <button onClick={handleThresholdListChange}>Set</button>
+            </div>
+          </div>
+
+          <div className="C">
+            <div className="matrix configuration">
+              <h2>Variable Location List</h2>
+              <MathComponent tex={matrixToString([VL])} />
+            </div>
+            <div className="Row">
+              <input
+                className="input"
+                onChange={(e) => setInputVarLocList(e.target.value)}
+              />
+              <button onClick={handleVarLocListChange}>Set</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="Row">
         <div className="C">
           <div className="matrix configuration">
             <h2>Configuration Vector</h2>
             <MathComponent tex={matrixToString(C)} />
           </div>
-          <div className="Row">
-            <input
-              className="input"
-              onChange={(e) => setInputConfig(e.target.value)}
-            />
-            <button onClick={handleConfigChange}>Set</button>
-          </div>
-        </div>
-
-        <div className="C">
-          <div className="matrix configuration">
-            <h2>Function Matrix</h2>
-            <MathComponent tex={matrixToString(F)} />
-          </div>
-          <div className="Row">
-            <input
-              className="input"
-              onChange={(e) => setInputFunction(e.target.value)}
-            />
-            <button onClick={handleFunctionChange}>Set</button>
-          </div>
-        </div>
-
-        <div className="C">
-          <div className="matrix configuration">
-            <h2>Function Location Matrix</h2>
-            <MathComponent tex={matrixToString(L)} />
-          </div>
-          <div className="Row">
-            <input
-              className="input"
-              onChange={(e) => setInputFunctionLocation(e.target.value)}
-            />
-            <button onClick={handleFunctionLocationChange}>Set</button>
-          </div>
+          {!showSPMatrices && (
+            <div className="Row">
+              <input
+                className="input"
+                onChange={(e) => setInputConfig(e.target.value)}
+              />
+              <button onClick={handleConfigChange}>Set</button>
+            </div>
+          )}
         </div>
       </div>
-      {/* Next Row */}
-      <div className="Row">
-        <div className="C">
-          <div className="matrix configuration">
-            <h2>Synapse List</h2>
-            <MathComponent tex={matrixToString(syn)} />
+      {showSPMatrices && (
+        <div className="Row">
+          <div className="C">
+            <div className="matrix configuration">
+              <h2>Spiking Vector</h2>
+              <MathComponent tex={matrixToString(SV)} />
+            </div>
           </div>
-          <div className="Row">
-            <input
-              className="input"
-              onChange={(e) => setInputSynapseList(e.target.value)}
-            />
-            <button onClick={handleSynapseListChange}>Set</button>
-          </div>
-        </div>
 
-        <div className="C">
-          <div className="matrix configuration">
-            <h2>Threshold List</h2>
-            <MathComponent tex={matrixToString(T)} />
-          </div>
-          <div className="Row">
-            <input
-              className="input"
-              onChange={(e) => setInputThresholdList(e.target.value)}
-            />
-            <button onClick={handleThresholdListChange}>Set</button>
+          <div className="C">
+            <div className="matrix configuration">
+              <h2>Production Matrix</h2>
+              <MathComponent tex={matrixToString(PM)} />
+            </div>
           </div>
         </div>
+      )}
 
-        <div className="C">
-          <div className="matrix configuration">
-            <h2>Variable Location List</h2>
-            <MathComponent tex={matrixToString([VL])} />
-          </div>
-          <div className="Row">
-            <input
-              className="input"
-              onChange={(e) => setInputVarLocList(e.target.value)}
-            />
-            <button onClick={handleVarLocListChange}>Set</button>
-          </div>
-        </div>
-      </div>
       <button
-        onClick={() => setC([generateConfigurations(C, 1, L, F, T, VL, syn)])}
-      />
+        onClick={() => {
+          let matrices = generateConfigurations(C, 1, L, F, T, VL, syn);
+          let newC = matrices.unexploredStates;
+          let newS = matrices.S;
+          let newP = matrices.P;
+          setC(newC);
+          setSV(newS);
+          setPM(newP);
+          setShowNonSimMatrices(false);
+          setShowSPMatrices(true);
+        }}
+      >
+        Generate New Configuration
+      </button>
+      {showSPMatrices && (
+        <button
+          onClick={() => {
+            setShowNonSimMatrices(true);
+            setShowSPMatrices(false);
+          }}
+        >
+          Edit Matrices
+        </button>
+      )}
     </div>
   );
 }

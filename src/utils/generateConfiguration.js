@@ -77,6 +77,8 @@ export default function generateConfigurations(C, maxDepth, L, F, T, VL, syn) {
 
   let depth = 0;
   let currentDepth = 0;
+  let S = [];
+  let P = [];
   while (depth < maxDepth) {
     let nextstates = [];
     for (let i = 0; i < unexploredStates.length; i++) {
@@ -88,9 +90,9 @@ export default function generateConfigurations(C, maxDepth, L, F, T, VL, syn) {
       // }
 
       // console.log("Unexplored State: ", unexploredStates[i]);
-      let S = generateSM(unexploredStates[i], L, F, T);
+      S = generateSM(unexploredStates[i], L, F, T);
       // S = S_debug;
-      let P = generatePM(unexploredStates[i], F, L, VL, syn, T);
+      P = generatePM(unexploredStates[i], F, L, VL, syn, T);
       let V = checkActiveVars(S, F);
       let NG = multiplyMatrix(S, P);
       let C_next = addMatrix(V, NG);
@@ -113,9 +115,9 @@ export default function generateConfigurations(C, maxDepth, L, F, T, VL, syn) {
     // clear unexplored states
     unexploredStates = [];
     // Add nextstates to unexplored states
-    unexploredStates.push(...nextstates);
+    unexploredStates = nextstates;
     // graph.printGraph(computationHistory);
     depth++;
   }
-  return unexploredStates[0];
+  return { unexploredStates, S, P };
 }
