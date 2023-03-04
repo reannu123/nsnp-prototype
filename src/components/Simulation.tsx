@@ -4,6 +4,9 @@ import { useState } from "react";
 import "./Simulation.css";
 import { MathComponent } from "mathjax-react";
 import generateConfigurations from "../utils/generateConfiguration.js";
+import { CheckBox } from "@mui/icons-material";
+import { Checkbox } from "@mui/material";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function Simulation() {
   // States for the Input Fields
@@ -125,10 +128,6 @@ function Simulation() {
     } else {
       setGuidedMode(false);
     }
-  }
-
-  function handleNewC(newC: number[]) {
-    setC(newC);
   }
 
   return (
@@ -294,7 +293,10 @@ function Simulation() {
           <div className="C">
             <div className="matrix configuration">
               <h2>Guided Mode</h2>
-              <input type="checkbox" onChange={(e) => handleGuidedMode(e)} />
+              <Checkbox
+                onChange={(e) => handleGuidedMode(e)}
+                sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
+              />
             </div>
           </div>
           <button
@@ -314,7 +316,7 @@ function Simulation() {
 
               let newS = matrices.S;
               let newP = matrices.P;
-              handleNewC(newC);
+              setC(newC);
               setSV(newS);
               setPM(newP);
               setCHist((CHist) => [...CHist, C]);
@@ -345,7 +347,7 @@ function Simulation() {
                   let newC = CHist[timeSteps - 1];
                   let newS = SHist[timeSteps - 1];
                   let newP = PHist[timeSteps - 1];
-                  handleNewC(newC);
+                  setC(newC);
                   setSV(newS);
                   setPM(newP);
                   setCHist(CHist.slice(0, timeSteps));
