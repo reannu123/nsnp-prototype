@@ -9,6 +9,8 @@ import { Checkbox } from "@mui/material";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./Header/Header";
 import SubHeader from "./SubHeader/SubHeader";
+import ConfigHist from "./ConfigHist/ConfigHist";
+import Settings from "./Settings/Settings";
 
 function Simulation() {
   // States for the Input Fields
@@ -53,6 +55,8 @@ function Simulation() {
   //States for Viewing components
   const [showNonSimMatrices, setShowNonSimMatrices] = useState(true);
   const [showSPMatrices, setShowSPMatrices] = useState(false);
+  const [showConfigHist, setShowConfigHist] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   // Convert Matrix to Latex string
   function matrixToString(matrix: number[][]) {
@@ -178,15 +182,50 @@ function Simulation() {
     setC(newC);
     setSV(newS);
     setPM(newP);
-    setCHist(CHist.slice(0, timeSteps));
-    setPHist(PHist.slice(0, timeSteps));
-    setSHist(SHist.slice(0, timeSteps));
+    setCHist(CHist.slice(0, timeSteps - 1));
+    setPHist(PHist.slice(0, timeSteps - 1));
+    setSHist(SHist.slice(0, timeSteps - 1));
     setTimeSteps(timeSteps - 1);
   }
 
+  function handleRewind(index) {
+    if (timeSteps == 0 || index > timeSteps) {
+      return;
+    }
+    let newC = CHist[index];
+    let newS = SHist[index];
+    let newP = PHist[index];
+    setC(newC);
+    setSV(newS);
+    setPM(newP);
+    setCHist(CHist.slice(0, index));
+    setPHist(PHist.slice(0, index));
+    setSHist(SHist.slice(0, index));
+    setTimeSteps(index);
+    console.log("Index: ", index);
+  }
+  function handleOpenHistory() {
+    setShowConfigHist(!showConfigHist);
+    if (showSettings) {
+      setShowSettings(false);
+    }
+  }
+  function handleOpenSettings() {
+    setShowSettings(!showSettings);
+    if (showConfigHist) {
+      setShowConfigHist(false);
+    }
+  }
   return (
     <>
-      <Header />
+      <Settings open={showSettings} onClose={handleOpenSettings} />
+      <ConfigHist
+        open={showConfigHist}
+        onClose={handleOpenHistory}
+        list={CHist}
+        itemAction={handleRewind}
+      />
+      <Header leftbutton={handleOpenSettings} rightbutton={handleOpenHistory} />
       <SubHeader
         forward={handleGeneration}
         reset={handleReset}
@@ -196,80 +235,8 @@ function Simulation() {
         checkbox={handleGuidedMode}
       />
 
-      <div className="Row">
+      <div className="workspace text-white">
         <div className="Column">
-          {showNonSimMatrices && (
-            <div className="Row">
-              <div className="C">
-                <div className="matrix configuration">
-                  <h2>Function Matrix</h2>
-                  <MathComponent tex={matrixToString(F)} />
-                </div>
-                <div className="Row">
-                  <input
-                    className="input"
-                    onChange={(e) => setInputFunction(e.target.value)}
-                  />
-                  <button onClick={handleFunctionChange}>Set</button>
-                </div>
-              </div>
-              <div className="C">
-                <div className="matrix configuration">
-                  <h2>Function Location Matrix</h2>
-                  <MathComponent tex={matrixToString(L)} />
-                </div>
-                <div className="Row">
-                  <input
-                    className="input"
-                    onChange={(e) => setInputFunctionLocation(e.target.value)}
-                  />
-                  <button onClick={handleFunctionLocationChange}>Set</button>
-                </div>
-              </div>
-              <div className="C">
-                <div className="matrix configuration">
-                  <h2>Synapse List</h2>
-                  <MathComponent tex={matrixToString(syn)} />
-                </div>
-                <div className="Row">
-                  <input
-                    className="input"
-                    onChange={(e) => setInputSynapseList(e.target.value)}
-                  />
-                  <button onClick={handleSynapseListChange}>Set</button>
-                </div>
-              </div>
-
-              <div className="C">
-                <div className="matrix configuration">
-                  <h2>Threshold List</h2>
-                  <MathComponent tex={matrixToString(T)} />
-                </div>
-                <div className="Row">
-                  <input
-                    className="input"
-                    onChange={(e) => setInputThresholdList(e.target.value)}
-                  />
-                  <button onClick={handleThresholdListChange}>Set</button>
-                </div>
-              </div>
-
-              <div className="C">
-                <div className="matrix configuration">
-                  <h2>Variable Location List</h2>
-                  <MathComponent tex={matrixToString([VL])} />
-                </div>
-                <div className="Row">
-                  <input
-                    className="input"
-                    onChange={(e) => setInputVarLocList(e.target.value)}
-                  />
-                  <button onClick={handleVarLocListChange}>Set</button>
-                </div>
-              </div>
-            </div>
-          )}
-
           <div className="Row">
             <div className="C">
               <div className="matrix configuration">

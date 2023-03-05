@@ -14,7 +14,7 @@ function SubHeader(props) {
     console.log("Clicked");
   }
   return (
-    <div className=" d-flex col justify-content-center align-items-center text-center mb-2 text-white">
+    <div className=" d-flex col justify-content-center align-items-center text-center text-white">
       <div className="d-flex col justify-content-center align-items-center p-2 text-center subHeader">
         <div
           className="d-flex align-items-center subheaderbutton mx-1"

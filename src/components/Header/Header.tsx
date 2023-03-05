@@ -13,7 +13,7 @@ function Header(props) {
     <div className="d-flex col justify-content-between align-items-center text-center p-4 bg-dark text-white">
       <div
         className="d-flex align-items-center headerbutton"
-        onClick={handleClick}
+        onClick={props.leftbutton}
       >
         <SettingsIcon fontSize="large" />
         <div className="mx-2 d-none d-lg-flex align-items-center">
@@ -23,7 +23,7 @@ function Header(props) {
       <h1>NSNP Simulation Prototype</h1>
       <div
         className="d-flex align-items-center headerbutton"
-        onClick={handleClick}
+        onClick={props.rightbutton}
       >
         <HistoryIcon fontSize="large" />
         <h4 className="mx-2 d-none d-lg-flex">History</h4>
