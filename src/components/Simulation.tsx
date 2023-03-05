@@ -8,6 +8,7 @@ import { CheckBox } from "@mui/icons-material";
 import { Checkbox } from "@mui/material";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./Header/Header";
+import SubHeader from "./SubHeader/SubHeader";
 
 function Simulation() {
   // States for the Input Fields
@@ -134,6 +135,7 @@ function Simulation() {
   return (
     <>
       <Header />
+      <SubHeader />
       <div className="Row">
         <div className="Column">
           {showNonSimMatrices && (
