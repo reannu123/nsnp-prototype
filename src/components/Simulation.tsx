@@ -11,15 +11,10 @@ import Header from "./Header/Header";
 import SubHeader from "./SubHeader/SubHeader";
 import ConfigHist from "./ConfigHist/ConfigHist";
 import Settings from "./Settings/Settings";
+import Matrices from "./Matrices/Matrices";
+import WorkSpace from "./WorkSpace/WorkSpace";
 
 function Simulation() {
-  // States for the Input Fields
-  const [inputConfig, setInputConfig] = useState("");
-  const [inputFunction, setInputFunction] = useState("");
-  const [inputFunctionLocation, setInputFunctionLocation] = useState("");
-  const [inputSynapseList, setInputSynapseList] = useState("");
-  const [inputThresholdList, setInputThresholdList] = useState("");
-  const [inputVarLocList, setInputVarLocList] = useState("");
   // Control States
   const [timeSteps, setTimeSteps] = useState(0);
   const [guidedMode, setGuidedMode] = useState(false);
@@ -49,6 +44,22 @@ function Simulation() {
     [1, 2],
     [2, 1],
   ]);
+
+  let matrixProps = {
+    C: C,
+    VL: VL,
+    F: F,
+    L: L,
+    T: T,
+    syn: syn,
+    setC: setC,
+    setVL: setVL,
+    setF: setF,
+    setL: setL,
+    setT: setT,
+    setSyn: setSyn,
+    setCHist: setCHist,
+  };
   const [SV, setSV] = useState<number[][]>([[]]);
   const [PM, setPM] = useState<number[][]>([[]]);
 
@@ -59,81 +70,9 @@ function Simulation() {
   const [showSettings, setShowSettings] = useState(false);
 
   // Convert Matrix to Latex string
-  function matrixToString(matrix: number[][]) {
-    let string = `\\left(\\begin{array}{ccc} `;
-    for (let i = 0; i < matrix.length; i++) {
-      for (let j = 0; j < matrix[i].length; j++) {
-        string += matrix[i][j];
-        if (j < matrix[i].length - 1) {
-          string += `&`;
-        }
-      }
-      if (i < matrix.length - 1) {
-        string += ` \\\\ `;
-      }
-    }
-    string += ` \\end{array}\\right)`;
-    return string;
-  }
 
-  // Changing of Configuration Vector
-  function handleConfigChange() {
-    console.log("CHist: ", CHist);
-    if (inputConfig != "") {
-      let matrixForm = "[" + inputConfig + "]";
-      setC(JSON.parse(matrixForm));
-      setInputConfig("");
-      setCHist([]);
-    }
-  }
-
-  function handleFunctionChange() {
-    if (inputFunction != "") {
-      let matrixForm = "[" + inputFunction + "]";
-      setF(JSON.parse(matrixForm));
-      setInputFunction("");
-    }
-  }
-
-  function handleFunctionLocationChange() {
-    if (inputFunctionLocation != "") {
-      let matrixForm = "[" + inputFunctionLocation + "]";
-      setL(JSON.parse(matrixForm));
-      setInputFunctionLocation("");
-    }
-  }
-
-  function handleSynapseListChange() {
-    if (inputSynapseList != "") {
-      let matrixForm = "[" + inputSynapseList + "]";
-      setSyn(JSON.parse(matrixForm));
-      setInputSynapseList("");
-    }
-  }
-
-  function handleThresholdListChange() {
-    if (inputThresholdList != "") {
-      let matrixForm = "[" + inputThresholdList + "]";
-      setT(JSON.parse(matrixForm));
-      setInputThresholdList("");
-    }
-  }
-
-  function handleVarLocListChange() {
-    if (inputVarLocList != "") {
-      let matrixForm = "[" + inputVarLocList + "]";
-      setVL(JSON.parse(matrixForm));
-      setInputVarLocList("");
-    }
-  }
-
-  function handleGuidedMode(e: any) {
-    console.log(e.target.checked);
-    if (e.target.checked) {
-      setGuidedMode(true);
-    } else {
-      setGuidedMode(false);
-    }
+  function handleGuidedMode() {
+    setGuidedMode(!guidedMode);
   }
 
   function handleGeneration() {
@@ -218,7 +157,12 @@ function Simulation() {
   }
   return (
     <>
-      <Settings open={showSettings} onClose={handleOpenSettings} />
+      <Settings
+        open={showSettings}
+        onClose={handleOpenSettings}
+        itemaction2={handleGuidedMode}
+        checked2={guidedMode}
+      />
       <ConfigHist
         open={showConfigHist}
         onClose={handleOpenHistory}
@@ -233,63 +177,12 @@ function Simulation() {
         undo={handleUndo}
         number={timeSteps}
         checkbox={handleGuidedMode}
+        checked={guidedMode}
       />
 
-      <div className="workspace text-white">
-        <div className="Column">
-          <div className="Row">
-            <div className="C">
-              <div className="matrix configuration">
-                <h2>Configuration Vector</h2>
-                <MathComponent tex={matrixToString([C])} />
-              </div>
-              {!showSPMatrices && (
-                <div className="Row">
-                  <input
-                    className="input"
-                    onChange={(e) => setInputConfig(e.target.value)}
-                  />
-                  <button onClick={handleConfigChange}>Set</button>
-                </div>
-              )}
-            </div>
-            {guidedMode && !showNonSimMatrices && (
-              <div className="C">
-                <div className="matrix configuration">
-                  <h2>Function Matrix</h2>
-                  <MathComponent tex={matrixToString(F)} />
-                </div>
-                {!showSPMatrices && (
-                  <div className="Row">
-                    <input
-                      className="input"
-                      onChange={(e) => setInputFunction(e.target.value)}
-                    />
-                    <button onClick={handleFunctionChange}>Set</button>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-          {showSPMatrices && (
-            <div className="Row">
-              <div className="C">
-                <div className="matrix configuration">
-                  <h2>Spiking Vector</h2>
-                  <MathComponent tex={matrixToString(SV)} />
-                </div>
-              </div>
+      {showNonSimMatrices && <Matrices {...matrixProps} />}
 
-              <div className="C">
-                <div className="matrix configuration">
-                  <h2>Production Matrix</h2>
-                  <MathComponent tex={matrixToString(PM)} />
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+      {showSPMatrices && <WorkSpace C={C} SV={SV} PM={PM} />}
     </>
   );
 }

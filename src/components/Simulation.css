@@ -1,13 +1,3 @@
-.matrix {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
 .Row {
   display: flex;
   flex-direction: row;
@@ -18,19 +8,6 @@
   text-align: center;
 }
 .workspace {
-  height: auto;
+  height: max-content;
   /* background-color: rgb(20, 24, 34); */
-}
-.input {
-  width: 100%;
-  height: 50px;
-  margin: 1px;
-  border: 1px solid black;
-  text-align: center;
-  font-size: 15px;
-  font-weight: bold;
-  background-color: #fff;
-  color: #000;
-  border-radius: 5px;
-  outline: none;
 }

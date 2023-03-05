@@ -47,7 +47,8 @@ function SubHeader(props) {
           <EditIcon fontSize="large" sx={{ color: yellow[500] }} />
         </div>
         <Checkbox
-          onChange={(e) => props.checkbox(e)}
+          checked={props.checked}
+          onChange={props.checkbox}
           sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
         />
       </div>
