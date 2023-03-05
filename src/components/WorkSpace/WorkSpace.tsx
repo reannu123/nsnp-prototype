@@ -19,29 +19,23 @@ function matrixToString(matrix: number[][]) {
 function WorkSpace(props) {
   return (
     <div className="workspace text-white">
-      <div className="Column">
-        <div className="Row">
-          <div className="C">
-            <div className="matrix configuration">
-              <h2>Configuration Vector</h2>
-              <MathComponent tex={matrixToString([props.C])} />
-            </div>
+      <div className="Cd-flex column align-items-center justify-content-around text-white">
+        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-2 text-center justify-content-center">
+          <div className="d-flex row my-5 justify-content-center">
+            <h2>Configuration Vector</h2>
+            <MathComponent tex={matrixToString([props.C])} />
           </div>
         </div>
 
-        <div className="Row">
-          <div className="C">
-            <div className="matrix configuration">
-              <h2>Spiking Vector</h2>
-              <MathComponent tex={matrixToString(props.SV)} />
-            </div>
+        <div className="row row-cols-1 row-cols-md-2 text-center justify-content-center">
+          <div className="d-flex row my-5 justify-content-center">
+            <h2>Spiking Vector</h2>
+            <MathComponent tex={matrixToString(props.SV)} />
           </div>
 
-          <div className="C">
-            <div className="matrix configuration">
-              <h2>Production Matrix</h2>
-              <MathComponent tex={matrixToString(props.PM)} />
-            </div>
+          <div className="d-flex row my-5 justify-content-center">
+            <h2>Production Matrix</h2>
+            <MathComponent tex={matrixToString(props.PM)} />
           </div>
         </div>
       </div>
