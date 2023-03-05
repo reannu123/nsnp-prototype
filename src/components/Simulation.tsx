@@ -7,6 +7,7 @@ import generateConfigurations from "../utils/generateConfiguration.js";
 import { CheckBox } from "@mui/icons-material";
 import { Checkbox } from "@mui/material";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Header from "./Header/Header";
 
 function Simulation() {
   // States for the Input Fields
@@ -132,27 +133,8 @@ function Simulation() {
 
   return (
     <>
+      <Header />
       <div className="Row">
-        <div
-          style={{
-            position: "absolute",
-            left: "5em",
-            top: "5em",
-            width: "10%",
-            height: "100%",
-            zIndex: 1,
-          }}
-        >
-          <h3>Configuration History</h3>
-          <div className="Column">
-            {CHist.map((c) => (
-              <div className="C" key={c[0]}>
-                <MathComponent tex={matrixToString([c])} />
-              </div>
-            ))}
-          </div>
-        </div>
-
         <div className="Column">
           {showNonSimMatrices && (
             <div className="Row">
@@ -276,104 +258,6 @@ function Simulation() {
                 </div>
               </div>
             </div>
-          )}
-        </div>
-        <div
-          style={{
-            position: "absolute",
-            right: "5em",
-            top: "5em",
-            width: "10%",
-            height: "100%",
-            zIndex: 1,
-          }}
-        >
-          <h2>Time Step</h2>
-          <div className="Column">{timeSteps}</div>
-          <div className="C">
-            <div className="matrix configuration">
-              <h2>Guided Mode</h2>
-              <Checkbox
-                onChange={(e) => handleGuidedMode(e)}
-                sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
-              />
-            </div>
-          </div>
-          <button
-            className="generate"
-            onClick={() => {
-              let matrices = generateConfigurations(
-                guidedMode,
-                [C],
-                1,
-                L,
-                F,
-                T,
-                VL,
-                syn
-              );
-              let newC = matrices.unexploredStates[0];
-
-              let newS = matrices.S;
-              let newP = matrices.P;
-              setC(newC);
-              setSV(newS);
-              setPM(newP);
-              setCHist((CHist) => [...CHist, C]);
-              setPHist((PHist) => [...PHist, newP]);
-              setSHist((SHist) => [...SHist, newS]);
-
-              setShowNonSimMatrices(false);
-              setShowSPMatrices(true);
-              setTimeSteps(timeSteps + 1);
-            }}
-          >
-            Generate New Configuration
-          </button>
-          {showSPMatrices && (
-            <button
-              onClick={() => {
-                setShowNonSimMatrices(true);
-                setShowSPMatrices(false);
-              }}
-            >
-              Edit Matrices
-            </button>
-          )}
-          {timeSteps > 0 && (
-            <>
-              <button
-                onClick={() => {
-                  let newC = CHist[timeSteps - 1];
-                  let newS = SHist[timeSteps - 1];
-                  let newP = PHist[timeSteps - 1];
-                  setC(newC);
-                  setSV(newS);
-                  setPM(newP);
-                  setCHist(CHist.slice(0, timeSteps));
-                  setPHist(PHist.slice(0, timeSteps));
-                  setSHist(SHist.slice(0, timeSteps));
-                  setTimeSteps(timeSteps - 1);
-                }}
-              >
-                Undo
-              </button>
-              {/* Reset Button */}
-              <button
-                onClick={() => {
-                  console.log("CHist: ", CHist);
-                  setC(CHist[0]);
-                  setSV([]);
-                  setPM([]);
-                  setCHist([]);
-                  setPHist([]);
-                  setSHist([]);
-                  setTimeSteps(0);
-                }}
-              >
-                Reset
-              </button>
-            </>
           )}
         </div>
       </div>

@@ -1,6 +1,7 @@
 import * as React from "react";
-import { slide as BurgerMenu } from "react-burger-menu";
+import StyledBurgerMenu from "../StyledBurgerMenu/StyledBurgerMenu";
 import "./ConfigHist.css";
+import { slide as BurgerMenu } from "react-burger-menu";
 
 export default function ConfigHist(props) {
   return (

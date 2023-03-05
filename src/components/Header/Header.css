@@ -1,0 +1,28 @@
+h4 {
+  margin-bottom: 0;
+}
+
+.button {
+  border: 1px solid rgb(33, 37, 41);
+  border-radius: 5px;
+  padding: 10px;
+  transition: all 0.3s ease;
+}
+
+.button:hover {
+  background-color: rgb(50, 53, 60);
+  color: #fff;
+  transition: all 0.3s ease;
+  /* change mouse cursor */
+  cursor: pointer;
+}
+
+/* clicked button */
+
+.button:active {
+  background-color: rgb(33, 37, 41);
+  color: #fff;
+  transition: all 0.3s ease;
+  /* change mouse cursor */
+  cursor: pointer;
+}
