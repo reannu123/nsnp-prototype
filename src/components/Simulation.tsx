@@ -132,10 +132,70 @@ function Simulation() {
     }
   }
 
+  function handleGeneration() {
+    let matrices = generateConfigurations(guidedMode, [C], 1, L, F, T, VL, syn);
+    let newC = matrices.unexploredStates[0];
+
+    let newS = matrices.S;
+    let newP = matrices.P;
+    setC(newC);
+    setSV(newS);
+    setPM(newP);
+    setCHist((CHist) => [...CHist, C]);
+    setPHist((PHist) => [...PHist, newP]);
+    setSHist((SHist) => [...SHist, newS]);
+
+    setShowNonSimMatrices(false);
+    setShowSPMatrices(true);
+    setTimeSteps(timeSteps + 1);
+  }
+
+  function handleReset() {
+    if (timeSteps == 0) {
+      return;
+    }
+    setC(CHist[0]);
+    setSV([]);
+    setPM([]);
+    setCHist([]);
+    setPHist([]);
+    setSHist([]);
+    setTimeSteps(0);
+  }
+
+  function handleEditMatrices() {
+    setShowNonSimMatrices(true);
+    setShowSPMatrices(false);
+  }
+
+  function handleUndo() {
+    if (timeSteps == 0) {
+      return;
+    }
+    let newC = CHist[timeSteps - 1];
+    let newS = SHist[timeSteps - 1];
+    let newP = PHist[timeSteps - 1];
+    setC(newC);
+    setSV(newS);
+    setPM(newP);
+    setCHist(CHist.slice(0, timeSteps));
+    setPHist(PHist.slice(0, timeSteps));
+    setSHist(SHist.slice(0, timeSteps));
+    setTimeSteps(timeSteps - 1);
+  }
+
   return (
     <>
       <Header />
-      <SubHeader />
+      <SubHeader
+        forward={handleGeneration}
+        reset={handleReset}
+        edit={handleEditMatrices}
+        undo={handleUndo}
+        number={timeSteps}
+        checkbox={handleGuidedMode}
+      />
+
       <div className="Row">
         <div className="Column">
           {showNonSimMatrices && (
