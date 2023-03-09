@@ -5,6 +5,7 @@ import "./App.css";
 import Simulation from "./components/Simulation";
 import ConfigHist from "./components/ConfigHist/ConfigHist";
 import Header from "./components/Header/Header";
+import Graph from "./components/Graph/Graph";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -16,6 +17,7 @@ function App() {
         {/* <ConfigHist /> */}
 
         <Simulation />
+        {/* <Graph /> */}
       </div>
     </>
   );

@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import "./Simulation.css";
 import { MathComponent } from "mathjax-react";
-import generateConfigurations from "../utils/generateConfiguration.js";
+import generateConfigurations from "../utils/SimAlgs/generateConfiguration.js";
 import { CheckBox } from "@mui/icons-material";
 import { Checkbox } from "@mui/material";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -13,6 +13,7 @@ import ConfigHist from "./ConfigHist/ConfigHist";
 import Settings from "./Settings/Settings";
 import Matrices from "./Matrices/Matrices";
 import WorkSpace from "./WorkSpace/WorkSpace";
+import Graph from "./Graph/Graph";
 
 function Simulation() {
   // Control States
@@ -68,6 +69,7 @@ function Simulation() {
   const [showSPMatrices, setShowSPMatrices] = useState(false);
   const [showConfigHist, setShowConfigHist] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showGraph, setShowGraph] = useState(false);
 
   // Convert Matrix to Latex string
 
@@ -107,8 +109,8 @@ function Simulation() {
   }
 
   function handleEditMatrices() {
-    setShowNonSimMatrices(true);
-    setShowSPMatrices(false);
+    setShowNonSimMatrices(!showNonSimMatrices);
+    setShowSPMatrices(!showSPMatrices);
   }
 
   function handleUndo() {
@@ -155,13 +157,19 @@ function Simulation() {
       setShowConfigHist(false);
     }
   }
+  function handleShowGraph() {
+    setShowGraph(!showGraph);
+  }
+
   return (
     <>
       <Settings
         open={showSettings}
         onClose={handleOpenSettings}
-        itemaction2={handleGuidedMode}
-        checked2={guidedMode}
+        itemaction={handleGuidedMode}
+        itemaction1={handleShowGraph}
+        checked1={showGraph}
+        checked={guidedMode}
       />
       <ConfigHist
         open={showConfigHist}
@@ -176,13 +184,14 @@ function Simulation() {
         edit={handleEditMatrices}
         undo={handleUndo}
         number={timeSteps}
-        checkbox={handleGuidedMode}
-        checked={guidedMode}
+        checkbox={handleShowGraph}
+        checked={showGraph}
       />
 
       {showNonSimMatrices && <Matrices {...matrixProps} />}
 
-      {showSPMatrices && <WorkSpace C={C} SV={SV} PM={PM} />}
+      {showSPMatrices && !showGraph && <WorkSpace C={C} SV={SV} PM={PM} />}
+      {!showNonSimMatrices && showGraph && <Graph {...matrixProps} />}
     </>
   );
 }

@@ -19,8 +19,11 @@ export default function ConfigHist(props) {
         <div className="ListItem Setting">
           <h4>About</h4>
         </div>
-        <div className="ListItem Setting" onClick={props.itemaction2}>
-          {props.checked2 ? <h4>Guided Mode</h4> : <h4>Pseudorandom</h4>}
+        <div className="ListItem Setting" onClick={props.itemaction}>
+          {props.checked ? <h4>Guided Mode</h4> : <h4>Pseudorandom</h4>}
+        </div>
+        <div className="ListItem Setting" onClick={props.itemaction1}>
+          <h4>{!props.checked1 ? <>Show</> : <>Hide</>} Graph</h4>
         </div>
         <div className="ListItem Setting">
           <h4>Help</h4>
