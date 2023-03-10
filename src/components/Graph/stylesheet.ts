@@ -1,4 +1,8 @@
 import cytoscape from "cytoscape";
+import { mathJaxSvg } from "../../utils/mathJaxsvg";
+
+let svg_math = mathJaxSvg("\\sum^N_i x_i+y_i \\xrightarrow{3}");
+
 let stylesheet: cytoscape.Stylesheet[] = [
   {
     selector: ".neuron",
@@ -8,19 +12,23 @@ let stylesheet: cytoscape.Stylesheet[] = [
       "text-halign": "center",
       shape: "roundrectangle",
       "background-color": "white",
+      "background-image": svg_math,
       "border-color": "black",
     },
   },
   {
     selector: ".function",
     css: {
-      content: "data(label)",
+      // content: "data(label)",
       "text-valign": "center",
       "text-halign": "center",
       "text-wrap": "wrap",
       "font-family": "Computer Modern",
       events: "no",
-      // the box should not change color when selected
+      "background-image": function (ele) {
+        console.log("ele: ", ele.data("label"));
+        return mathJaxSvg(ele.data("label"));
+      },
       "background-color": "white",
       shape: "roundrectangle",
       width: 200,
@@ -41,7 +49,6 @@ let stylesheet: cytoscape.Stylesheet[] = [
       "text-background-shape": "roundrectangle",
       "text-rotation": "autorotate",
       "text-margin-y": -5,
-      "background-image": "data(image)",
     },
   },
 ];

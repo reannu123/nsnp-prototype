@@ -22,7 +22,7 @@ function functionToString(F: number[]) {
 export function createNeuron(VL, C, F, L, i) {
   // the value of each element in VL is the location of each variable in C
   let label = "";
-  let functions = "";
+  let functions = `\\displaylines{`;
 
   // Get the values of the variables
   for (let j = 0; j < VL.length; j++) {
@@ -37,9 +37,10 @@ export function createNeuron(VL, C, F, L, i) {
   // Get the functions of the neuron
   for (let j = 0; j < L.length; j++) {
     if (L[j][i] === 1) {
-      functions += functionToString(F[j]) + "\n";
+      functions += functionToString(F[j]) + "\\\\";
     }
   }
+  functions += "}";
 
   return [
     {
