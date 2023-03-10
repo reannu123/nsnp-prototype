@@ -41,6 +41,7 @@ let stylesheet: cytoscape.Stylesheet[] = [
       "text-background-shape": "roundrectangle",
       "text-rotation": "autorotate",
       "text-margin-y": -5,
+      "background-image": "data(image)",
     },
   },
 ];
