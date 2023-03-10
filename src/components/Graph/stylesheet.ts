@@ -7,29 +7,26 @@ let stylesheet: cytoscape.Stylesheet[] = [
   {
     selector: ".neuron",
     css: {
-      content: "data(label)",
-      "text-valign": "top",
-      "text-halign": "center",
       shape: "roundrectangle",
+      content: "data(id)",
       "background-color": "white",
-      "background-image": svg_math,
       "border-color": "black",
+      "background-opacity": 1,
+      "font-family": "Computer Modern",
     },
   },
   {
     selector: ".function",
     css: {
-      // content: "data(label)",
-      "text-valign": "center",
-      "text-halign": "center",
-      "text-wrap": "wrap",
-      "font-family": "Computer Modern",
       events: "no",
+      "text-wrap": "wrap",
       "background-image": function (ele) {
-        console.log("ele: ", ele.data("label"));
         return mathJaxSvg(ele.data("label"));
       },
+      "background-fit": "contain",
       "background-color": "white",
+      "background-opacity": 1,
+
       shape: "roundrectangle",
       width: 200,
       height: 125,
