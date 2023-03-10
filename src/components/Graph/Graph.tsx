@@ -18,15 +18,17 @@ export default function Graph(props) {
     // Loop through the neurons
     for (let i = 0; i < max; i++) {
       // Create a neuron for each variable
-      newElements.push(...createNeuron(props.VL, props.C, props.F, props.L, i));
+      newElements.push(
+        ...createNeuron(props.VL, props.C, props.F, props.L, i, props.T)
+      );
     }
 
     // From props.syn, create a list of edges where the source and target are the nodes in the list of nodes
     for (let i = 0; i < props.syn.length; i++) {
       newElements.push({
         data: {
-          source: "container" + (props.syn[i][0] - 1),
-          target: "container" + (props.syn[i][1] - 1),
+          source: "Neuron " + props.syn[i][0],
+          target: "Neuron " + props.syn[i][1],
           label: props.syn[i][2],
           classes: "edge",
         },

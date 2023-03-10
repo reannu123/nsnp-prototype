@@ -1,4 +1,4 @@
-function functionToString(F: number[], j: number, vars) {
+function functionToString(F: number[], j: number, vars, threshold) {
   let string = "";
 
   string += "f_" + (j + 1) + "(";
@@ -14,53 +14,64 @@ function functionToString(F: number[], j: number, vars) {
     }
   }
   string = string.slice(0, -3);
+
+  // Threshold addition
+
+  if (threshold != 0) {
+    string += "\\,|_" + threshold;
+  }
   return string;
 }
 
-export function createNeuron(VL, C, F, L, i) {
+export function createNeuron(VL, C, F, L, i, T) {
   let vars: number[] = [];
   let indices: number[] = [];
-  let functions = `\\displaylines{`;
+  let neuronText = `\\displaylines{`;
 
   // Get the values of the variables
+  let varString = "";
   for (let j = 0; j < VL.length; j++) {
     if (VL[j] === i + 1) {
+      varString += "x_" + (j + 1) + "[" + C[j] + "], \\;";
       vars.push(C[j]);
       indices.push(j);
     }
   }
-  for (let i = 0; i < vars.length; i++) {
-    functions += "x_" + (indices[i] + 1) + "[" + vars[i] + "]";
-  }
-  functions += "\\\\\\\\";
+  varString = varString.slice(0, -4);
+  neuronText += varString + "\\\\\\\\";
 
+  let functionString = "";
   // Get the functions of the neuron
   for (let j = 0; j < L.length; j++) {
     if (L[j][i] === 1) {
-      functions += functionToString(F[j], j, indices) + "\\\\";
+      let threshold: number = 0;
+      for (let k = 0; k < T.length; k++) {
+        if (T[k][0] === j + 1) threshold = T[k][1];
+      }
+
+      functionString += functionToString(F[j], j, indices, threshold) + "\\\\";
     }
   }
-  functions += "}";
+  neuronText += functionString + "}";
 
   return [
     {
       data: {
-        id: "container" + i,
-        label: "label",
+        id: "Neuron " + (i + 1),
       },
       classes: "neuron",
     },
     {
       data: {
-        parent: "container" + i,
-        id: "neuron" + i,
-        label: functions,
+        parent: "Neuron " + (i + 1),
+        id: "neuron-contents" + i,
+        label: neuronText,
       },
       position: {
-        x: 100 * (10 * i),
+        x: 100 * (4 * (i + 1)),
         y: 100 + 100,
       },
-      classes: "function",
+      classes: "neuron-contents",
     },
   ];
 }

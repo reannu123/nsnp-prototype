@@ -16,7 +16,7 @@ let stylesheet: cytoscape.Stylesheet[] = [
     },
   },
   {
-    selector: ".function",
+    selector: ".neuron-contents",
     css: {
       events: "no",
       "text-wrap": "wrap",
