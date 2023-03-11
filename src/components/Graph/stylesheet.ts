@@ -28,8 +28,17 @@ let stylesheet: cytoscape.Stylesheet[] = [
       "background-opacity": 1,
 
       shape: "roundrectangle",
-      width: 200,
-      height: 125,
+      width: function (ele) {
+        let numBackslashes = (ele.data("label").match(/\\\\/g) || []).length;
+        let tentLength = (ele.data("label").length / numBackslashes) * 10;
+        return tentLength;
+      },
+      height: function (ele) {
+        let numBackslashes = (ele.data("label").match(/\\\\/g) || []).length;
+
+        let tentLength = numBackslashes * 25;
+        return tentLength;
+      },
     },
   },
   {
