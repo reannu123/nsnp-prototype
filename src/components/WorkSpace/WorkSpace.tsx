@@ -18,8 +18,8 @@ function matrixToString(matrix: number[][]) {
 }
 function WorkSpace(props) {
   return (
-    <div className="workspace text-white">
-      <div className="Cd-flex column align-items-center justify-content-around text-white">
+    <div className="workspace">
+      <div className="Cd-flex column align-items-center justify-content-around">
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-2 text-center justify-content-center">
           <div className="d-flex row my-5 justify-content-center">
             <h2>Configuration Vector</h2>

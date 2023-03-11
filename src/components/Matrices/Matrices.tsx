@@ -78,7 +78,7 @@ function Matrices(props) {
   }
   return (
     <>
-      <div className="d-flex column align-items-center justify-content-around text-white">
+      <div className="d-flex column align-items-center justify-content-around">
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-2 text-center justify-content-center">
           <div className="d-flex row my-5 justify-content-center">
             <h2>Configuration Vector</h2>
