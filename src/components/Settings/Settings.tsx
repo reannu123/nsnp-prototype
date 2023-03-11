@@ -25,6 +25,19 @@ export default function ConfigHist(props) {
         <div className="ListItem Setting" onClick={props.itemaction1}>
           <h4>{!props.checked1 ? <>Show</> : <>Hide</>} Graph</h4>
         </div>
+        <div className="ListItem Setting" onClick={props.itemaction2}>
+          <h4>Save System</h4>
+        </div>
+        <div className="ListItem Setting">
+          <h4>Load System</h4>
+          <input
+            type="file"
+            id="file"
+            onChange={(e) => {
+              props.itemaction3(e.target);
+            }}
+          />
+        </div>
         <div className="ListItem Setting">
           <h4>Help</h4>
         </div>

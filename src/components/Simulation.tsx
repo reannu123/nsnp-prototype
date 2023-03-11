@@ -14,6 +14,8 @@ import Settings from "./Settings/Settings";
 import Matrices from "./Matrices/Matrices";
 import WorkSpace from "./WorkSpace/WorkSpace";
 import Graph from "./Graph/Graph";
+import saveAs from "file-saver";
+import convert from "xml-js";
 
 function Simulation() {
   // Control States
@@ -164,6 +166,33 @@ function Simulation() {
   function handleShowGraph() {
     setShowGraph(!showGraph);
   }
+  function handleSave() {
+    const json = { C: C, VL: VL, F: F, L: L, T: T, syn: syn };
+    const xml = JSON.stringify(json);
+    console.log(JSON.parse(xml));
+
+    const blob = new Blob([xml], { type: "text/xml;charset=utf-8" });
+    let filename = JSON.stringify(C);
+    saveAs(blob, filename + ".nsnp");
+  }
+
+  function handleLoad(target) {
+    let file = target.files[0];
+    let reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = function () {
+      let json = JSON.parse(reader.result as string);
+      setC(json.C);
+      setVL(json.VL);
+      setF(json.F);
+      setL(json.L);
+      setT(json.T);
+      setSyn(json.syn);
+    };
+    reader.onerror = function () {
+      console.log(reader.error);
+    };
+  }
 
   return (
     <>
@@ -172,6 +201,8 @@ function Simulation() {
         onClose={handleOpenSettings}
         itemaction={handleGuidedMode}
         itemaction1={handleShowGraph}
+        itemaction2={handleSave}
+        itemaction3={handleLoad}
         checked1={showGraph}
         checked={guidedMode}
       />

@@ -21,6 +21,7 @@
     "bootstrap": "^5.2.3",
     "cytoscape": "^3.23.0",
     "cytoscape-cose-bilkent": "^4.1.0",
+    "file-saver": "^2.0.5",
     "mathjax": "^3.2.2",
     "mathjax-full": "^3.2.2",
     "mathjax-react": "^2.0.1",
@@ -31,7 +32,8 @@
     "react-cytoscapejs": "^2.0.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.2",
-    "react-select": "^5.7.0"
+    "react-select": "^5.7.0",
+    "xml-js": "^1.6.11"
   },
   "devDependencies": {
     "@types/node": "^18.14.6",
