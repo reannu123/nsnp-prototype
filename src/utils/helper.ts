@@ -68,7 +68,7 @@ export function createNeuron(VL, C, F, L, i, T) {
         label: neuronText,
       },
       position: {
-        x: 100 * (4 * (i + 1)),
+        x: 100 * (2.5 * (i + 1)),
         y: 100 + 100,
       },
       classes: "neuron-contents",
