@@ -28,28 +28,24 @@ function Simulation() {
   const [PHist, setPHist] = useState<number[][][]>([]);
 
   // States for the Matrices
-  const [C, setC] = useState([1, 1, 2, 4]);
-  const [VL, setVL] = useState([1, 1, 2, 3]);
+  const [C, setC] = useState([1, 1, 2]);
+  const [VL, setVL] = useState([1, 1, 2]);
   const [F, setF] = useState([
-    [1, 1, 0, 0],
-    [0.5, 0.5, 0, 0],
-    [0, 0, 1, 0],
-    [0, 0, 0.5, 0],
-    [0, 0, 0, 1],
+    [1, 1, 0],
+    [0.5, 0.5, 0],
+    [0, 0, 1],
+    [0, 0, 0.5],
   ]);
   const [L, setL] = useState([
-    [1, 0, 0],
-    [1, 0, 0],
-    [0, 1, 0],
-    [0, 1, 0],
-    [0, 0, 1],
+    [1, 0],
+    [1, 0],
+    [0, 1],
+    [0, 1],
   ]);
   const [T, setT] = useState([[4, 4]]);
   const [syn, setSyn] = useState([
     [1, 2],
     [2, 1],
-    [1, 3],
-    [3, 1],
   ]);
 
   let matrixProps = {
@@ -71,8 +67,8 @@ function Simulation() {
   const [PM, setPM] = useState<number[][]>([[]]);
 
   //States for Viewing components
-  const [showNonSimMatrices, setShowNonSimMatrices] = useState(true);
-  const [showSPMatrices, setShowSPMatrices] = useState(false);
+  const [showNonSimMatrices, setShowNonSimMatrices] = useState(false);
+  const [showSPMatrices, setShowSPMatrices] = useState(true);
   const [showConfigHist, setShowConfigHist] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showGraph, setShowGraph] = useState(true);
