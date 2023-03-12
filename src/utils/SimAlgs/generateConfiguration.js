@@ -33,7 +33,7 @@ function multiplyMatrix(A, B) {
   return C;
 }
 
-function checkActiveVars(S, F) {
+function checkActiveVars(S, F, C) {
   // console.log("CHECK ACTIVE VARS: \nS: ", S, "\nF: ", F, "\n");
   let V = [];
   for (let i = 0; i < S.length; i++) {
@@ -59,6 +59,15 @@ function checkActiveVars(S, F) {
             }
           }
         }
+      }
+    }
+  }
+
+  // If unused, need to make sure that the original value is set
+  for (let i = 0; i < V.length; i++) {
+    for (let j = 0; j < V[i].length; j++) {
+      if (V[i][j] == 1) {
+        V[i][j] = C[j];
       }
     }
   }
@@ -102,7 +111,7 @@ export default function generateConfigurations(
       S = generateSM(unexploredStates[i], L, F, T, guidedMode);
       // S = S_debug;
       P = generatePM(unexploredStates[i], F, L, VL, syn, T);
-      let V = checkActiveVars(S, F);
+      let V = checkActiveVars(S, F, unexploredStates[i]);
       let NG = multiplyMatrix(S, P);
       let C_next = addMatrix(V, NG);
 
