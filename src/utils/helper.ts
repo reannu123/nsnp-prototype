@@ -75,3 +75,29 @@ export function createNeuron(VL, C, F, L, i, T) {
     },
   ];
 }
+
+export function createEnvNode(envValue, i) {
+  let envText = `\\displaylines{`;
+  envText += envValue + "\\\\";
+  envText += "}";
+  return [
+    {
+      data: {
+        id: "Environment",
+      },
+      classes: "neuron",
+    },
+    {
+      data: {
+        parent: "Environment",
+        id: "Environment Contents",
+        label: envText,
+      },
+      position: {
+        x: 100 * (2.5 * (i + 1)),
+        y: 100 + 100,
+      },
+      classes: "neuron-contents",
+    },
+  ];
+}

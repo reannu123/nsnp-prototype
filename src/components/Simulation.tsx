@@ -66,6 +66,9 @@ function Simulation() {
   const [SV, setSV] = useState<number[][]>([[]]);
   const [PM, setPM] = useState<number[][]>([[]]);
 
+  const [envValue, setEnvValue] = useState<number[]>([]);
+  const [envSyn, setEnvSyn] = useState<number>(VL[VL.length - 1]);
+
   //States for Viewing components
   const [showNonSimMatrices, setShowNonSimMatrices] = useState(false);
   const [showSPMatrices, setShowSPMatrices] = useState(true);
@@ -85,12 +88,15 @@ function Simulation() {
 
     let newS = matrices.S;
     let newP = matrices.P;
+    let newEnvValue = C[envSyn];
     setC(newC);
     setSV(newS);
     setPM(newP);
     setCHist((CHist) => [...CHist, C]);
     setPHist((PHist) => [...PHist, newP]);
     setSHist((SHist) => [...SHist, newS]);
+    //TODO: Add setting of environment value from the node whose id is envSyn
+    setEnvValue((envValue) => [...envValue, newEnvValue]);
 
     setShowNonSimMatrices(false);
     setShowSPMatrices(true);
@@ -108,6 +114,7 @@ function Simulation() {
     setPHist([]);
     setSHist([]);
     setTimeSteps(0);
+    setEnvValue([]);
   }
 
   function handleEditMatrices() {
@@ -163,7 +170,7 @@ function Simulation() {
     setShowGraph(!showGraph);
   }
   function handleSave() {
-    const json = { C: C, VL: VL, F: F, L: L, T: T, syn: syn };
+    const json = { C: C, VL: VL, F: F, L: L, T: T, syn: syn, envSyn: envSyn };
     const xml = JSON.stringify(json);
     console.log(JSON.parse(xml));
 
@@ -184,6 +191,7 @@ function Simulation() {
       setL(json.L);
       setT(json.T);
       setSyn(json.syn);
+      setEnvSyn(json.envSyn);
     };
     reader.onerror = function () {
       console.log(reader.error);
@@ -222,7 +230,15 @@ function Simulation() {
       {showNonSimMatrices && <Matrices {...matrixProps} />}
 
       {showSPMatrices && !showGraph && <WorkSpace C={C} SV={SV} PM={PM} />}
-      {!showNonSimMatrices && showGraph && <Graph {...matrixProps} />}
+      {!showNonSimMatrices && showGraph && (
+        <Graph
+          {...matrixProps}
+          envSyn={envSyn}
+          setEnvSyn={setEnvSyn}
+          envValue={envValue}
+          setEnvValue={setEnvValue}
+        />
+      )}
     </>
   );
 }

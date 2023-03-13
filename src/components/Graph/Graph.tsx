@@ -2,7 +2,7 @@ import cytoscape, { Stylesheet, StylesheetCSS } from "cytoscape";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useEffect, useRef, useState } from "react";
 import { ElementDefinition } from "cytoscape";
-import { createNeuron } from "../../utils/helper";
+import { createEnvNode, createNeuron } from "../../utils/helper";
 import ButtonBar from "./ButtonBar";
 import stylesheet from "./stylesheet";
 import NewNodeForm from "../forms/NewNodeForm";
@@ -21,25 +21,43 @@ export default function Graph(props) {
     let max = Math.max(...props.VL);
 
     // Loop through the neurons
-    for (let i = 0; i < max; i++) {
+    for (let i = 0; i < max + 1; i++) {
       // Create a neuron for each variable
-      newElements.push(
-        ...createNeuron(props.VL, props.C, props.F, props.L, i, props.T)
-      );
+      if (i === max) {
+        newElements.push(...createEnvNode(props.envValue, i));
+      } else {
+        newElements.push(
+          ...createNeuron(props.VL, props.C, props.F, props.L, i, props.T)
+        );
+      }
     }
 
     // From props.syn, create a list of edges where the source and target are the nodes in the list of nodes
-    for (let i = 0; i < props.syn.length; i++) {
-      newElements.push({
-        data: {
-          id: "Synapse " + i,
-          source: "Neuron " + props.syn[i][0],
-          target: "Neuron " + props.syn[i][1],
-          label: props.syn[i][2],
-          classes: "edge",
-        },
-      });
+    for (let i = 0; i < props.syn.length + 1; i++) {
+      if (i === props.syn.length) {
+        newElements.push({
+          data: {
+            id: "Output Edge",
+            source: "Neuron " + props.envSyn,
+            target: "Environment",
+            label: "Output",
+            classes: "edge",
+          },
+        });
+        break;
+      } else {
+        newElements.push({
+          data: {
+            id: "Synapse " + i,
+            source: "Neuron " + props.syn[i][0],
+            target: "Neuron " + props.syn[i][1],
+            label: props.syn[i][2],
+            classes: "edge",
+          },
+        });
+      }
     }
+
     setElements(newElements);
   }
 
