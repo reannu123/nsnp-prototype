@@ -83,12 +83,21 @@ function Simulation() {
   }
 
   function handleGeneration() {
-    let matrices = generateConfigurations(guidedMode, [C], 1, L, F, T, VL, syn);
+    let matrices = generateConfigurations(
+      guidedMode,
+      [C],
+      1,
+      L,
+      F,
+      T,
+      VL,
+      syn,
+      envSyn
+    );
     let newC = matrices.unexploredStates[0];
 
     let newS = matrices.S;
     let newP = matrices.P;
-    let newEnvValue = C[envSyn];
     setC(newC);
     setSV(newS);
     setPM(newP);
@@ -96,7 +105,7 @@ function Simulation() {
     setPHist((PHist) => [...PHist, newP]);
     setSHist((SHist) => [...SHist, newS]);
     //TODO: Add setting of environment value from the node whose id is envSyn
-    setEnvValue((envValue) => [...envValue, newEnvValue]);
+    setEnvValue((envValue) => [...envValue, matrices.finalEnvValue]);
 
     setShowNonSimMatrices(false);
     setShowSPMatrices(true);

@@ -19,8 +19,10 @@ function arrayEquals(a, b) {
 
 // Algorithm 2: Production Matrix
 // consists of the effects of each function in changing of variable values
-export function generatePM(C, F, L, VL, syn, T) {
+export function generatePM(C, F, L, VL, syn, T, envSyn) {
   let P = [];
+  let envValue = [];
+  let funcValue = [];
   for (let i = 0; i < F.length; i++) {
     P.push([]);
     for (let j = 0; j < F[i].length; j++) {
@@ -35,7 +37,10 @@ export function generatePM(C, F, L, VL, syn, T) {
     }
 
     let m = getNeuronFromFunction(i, L) + 1;
-    // console.log(m);
+    if (m === envSyn) {
+      envValue.push(sum);
+      funcValue.push(i);
+    }
 
     for (let j = 0; j < F[0].length; j++) {
       let target = [m, VL[j]];
@@ -47,5 +52,9 @@ export function generatePM(C, F, L, VL, syn, T) {
       }
     }
   }
-  return P;
+  return {
+    P: P,
+    envValue: envValue,
+    funcValue: funcValue,
+  };
 }
