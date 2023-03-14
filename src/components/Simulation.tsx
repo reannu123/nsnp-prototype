@@ -82,6 +82,10 @@ function Simulation() {
     setGuidedMode(!guidedMode);
   }
 
+  useEffect(() => {
+    let stored = localStorage.get("nsnp-system");
+  }, [C, L, F, T, VL, syn, envSyn]);
+
   function handleGeneration() {
     let matrices = generateConfigurations(
       guidedMode,
