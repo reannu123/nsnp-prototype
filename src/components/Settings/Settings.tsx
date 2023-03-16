@@ -4,6 +4,8 @@ import "./Settings.css";
 import { slide as BurgerMenu } from "react-burger-menu";
 
 export default function ConfigHist(props) {
+  // Remove handlesave from props
+  const { handlesave, ...rest } = props;
   return (
     <BurgerMenu
       left
@@ -25,7 +27,12 @@ export default function ConfigHist(props) {
         <div className="ListItem Setting" onClick={props.itemaction1}>
           <h4>{!props.checked1 ? <>Show</> : <>Hide</>} Graph</h4>
         </div>
-        <div className="ListItem Setting" onClick={props.itemaction2}>
+        <div
+          className="ListItem Setting"
+          onClick={(e) => {
+            props.itemaction2(rest);
+          }}
+        >
           <h4>Save System</h4>
         </div>
         <div className="ListItem Setting">
@@ -34,7 +41,7 @@ export default function ConfigHist(props) {
             type="file"
             id="file"
             onChange={(e) => {
-              props.itemaction3(e.target);
+              props.itemaction3(e.target, props);
             }}
           />
         </div>

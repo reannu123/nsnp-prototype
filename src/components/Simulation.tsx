@@ -4,8 +4,6 @@ import { useState } from "react";
 import "./Simulation.css";
 import { MathComponent } from "mathjax-react";
 import generateConfigurations from "../utils/SimAlgs/generateConfiguration.js";
-import { CheckBox } from "@mui/icons-material";
-import { Checkbox } from "@mui/material";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./Header/Header";
 import SubHeader from "./SubHeader/SubHeader";
@@ -16,6 +14,9 @@ import WorkSpace from "./WorkSpace/WorkSpace";
 import Graph from "./Graph/Graph";
 import saveAs from "file-saver";
 import convert from "xml-js";
+import { useViewer } from "../utils/hooks/useViewer";
+import { useMatrixData } from "../utils/hooks/useMatrixData";
+import { handleSave, handleLoad } from "../utils/saveload";
 
 function Simulation() {
   // Control States
@@ -28,25 +29,29 @@ function Simulation() {
   const [PHist, setPHist] = useState<number[][][]>([]);
 
   // States for the Matrices
-  const [C, setC] = useState([1, 1, 2]);
-  const [VL, setVL] = useState([1, 1, 2]);
-  const [F, setF] = useState([
-    [1, 1, 0],
-    [0.5, 0.5, 0],
-    [0, 0, 1],
-    [0, 0, 0.5],
-  ]);
-  const [L, setL] = useState([
-    [1, 0],
-    [1, 0],
-    [0, 1],
-    [0, 1],
-  ]);
-  const [T, setT] = useState([[4, 4]]);
-  const [syn, setSyn] = useState([
-    [1, 2],
-    [2, 1],
-  ]);
+  const {
+    C,
+    setC,
+    VL,
+    setVL,
+    F,
+
+    setF,
+    L,
+    setL,
+    T,
+    setT,
+    syn,
+    setSyn,
+    envValue,
+    setEnvValue,
+    envSyn,
+    setEnvSyn,
+    SV,
+    setSV,
+    PM,
+    setPM,
+  } = useMatrixData();
 
   let matrixProps = {
     C: C,
@@ -61,31 +66,51 @@ function Simulation() {
     setL: setL,
     setT: setT,
     setSyn: setSyn,
+    setEnvSyn: setEnvSyn,
     setCHist: setCHist,
   };
-  const [SV, setSV] = useState<number[][]>([[]]);
-  const [PM, setPM] = useState<number[][]>([[]]);
-
-  const [envValue, setEnvValue] = useState<number[]>([]);
-  const [envSyn, setEnvSyn] = useState<number>(VL[VL.length - 1]);
 
   //States for Viewing components
-  const [showNonSimMatrices, setShowNonSimMatrices] = useState(false);
-  const [showSPMatrices, setShowSPMatrices] = useState(true);
-  const [showConfigHist, setShowConfigHist] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
-  const [showGraph, setShowGraph] = useState(true);
+  const {
+    showNonSimMatrices,
+    setShowNonSimMatrices,
+    showSPMatrices,
+    setShowSPMatrices,
+    showConfigHist,
+    setShowConfigHist,
+    showSettings,
+    setShowSettings,
+    showGraph,
+    setShowGraph,
+  } = useViewer();
 
-  // Convert Matrix to Latex string
+  // Functions for the buttons
+  function handleOpenSettings() {
+    setShowSettings(!showSettings);
+    if (showConfigHist) {
+      setShowConfigHist(false);
+    }
+  }
+  function handleOpenHistory() {
+    setShowConfigHist(!showConfigHist);
+    if (showSettings) {
+      setShowSettings(false);
+    }
+  }
+  function handleShowGraph() {
+    setShowGraph(!showGraph);
+  }
 
   function handleGuidedMode() {
     setGuidedMode(!guidedMode);
   }
 
-  useEffect(() => {
-    let stored = localStorage.get("nsnp-system");
-  }, [C, L, F, T, VL, syn, envSyn]);
+  function handleEditMatrices() {
+    setShowNonSimMatrices(!showNonSimMatrices);
+    setShowSPMatrices(!showSPMatrices);
+  }
 
+  // Main Simulation Functions
   function handleGeneration() {
     let matrices = generateConfigurations(
       guidedMode,
@@ -130,11 +155,6 @@ function Simulation() {
     setEnvValue([]);
   }
 
-  function handleEditMatrices() {
-    setShowNonSimMatrices(!showNonSimMatrices);
-    setShowSPMatrices(!showSPMatrices);
-  }
-
   function handleUndo() {
     if (timeSteps == 0) {
       return;
@@ -165,50 +185,6 @@ function Simulation() {
     setPHist(PHist.slice(0, index));
     setSHist(SHist.slice(0, index));
     setTimeSteps(index);
-    console.log("Index: ", index);
-  }
-  function handleOpenHistory() {
-    setShowConfigHist(!showConfigHist);
-    if (showSettings) {
-      setShowSettings(false);
-    }
-  }
-  function handleOpenSettings() {
-    setShowSettings(!showSettings);
-    if (showConfigHist) {
-      setShowConfigHist(false);
-    }
-  }
-  function handleShowGraph() {
-    setShowGraph(!showGraph);
-  }
-  function handleSave() {
-    const json = { C: C, VL: VL, F: F, L: L, T: T, syn: syn, envSyn: envSyn };
-    const xml = JSON.stringify(json);
-    console.log(JSON.parse(xml));
-
-    const blob = new Blob([xml], { type: "text/xml;charset=utf-8" });
-    let filename = JSON.stringify(C);
-    saveAs(blob, filename + ".nsnp");
-  }
-
-  function handleLoad(target) {
-    let file = target.files[0];
-    let reader = new FileReader();
-    reader.readAsText(file);
-    reader.onload = function () {
-      let json = JSON.parse(reader.result as string);
-      setC(json.C);
-      setVL(json.VL);
-      setF(json.F);
-      setL(json.L);
-      setT(json.T);
-      setSyn(json.syn);
-      setEnvSyn(json.envSyn);
-    };
-    reader.onerror = function () {
-      console.log(reader.error);
-    };
   }
 
   return (
@@ -222,6 +198,7 @@ function Simulation() {
         itemaction3={handleLoad}
         checked1={showGraph}
         checked={guidedMode}
+        {...matrixProps}
       />
       <ConfigHist
         open={showConfigHist}
@@ -240,9 +217,13 @@ function Simulation() {
         checked={showGraph}
       />
 
+      {/* Show Matrices and Input */}
       {showNonSimMatrices && <Matrices {...matrixProps} />}
 
+      {/* Show Simulation Matrices (WorkSpace)*/}
       {showSPMatrices && !showGraph && <WorkSpace C={C} SV={SV} PM={PM} />}
+
+      {/* Show Graph */}
       {!showNonSimMatrices && showGraph && (
         <Graph
           {...matrixProps}

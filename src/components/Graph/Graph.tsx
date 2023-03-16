@@ -93,6 +93,19 @@ export default function Graph(props) {
         setSelectedNode(evtTarget.id());
       }
     });
+
+    // Get the position of all nodes
+    cy.on("mouseup", function (event) {
+      let positions = cy.nodes().map((node) => {
+        return {
+          id: node.id(),
+          position: node.position(),
+        };
+      });
+      // Save positions in local storage
+
+      console.log("Positions: ", positions);
+    });
   }, [cyRef]);
 
   return (
