@@ -16,6 +16,7 @@ export default function Graph(props) {
   const [showNewNode, setShowNewNode] = useState(false);
 
   function createSystem() {
+    console.log("Env Syn: " + props.envSyn);
     let newElements: ElementDefinition[] = [];
     // get the max value in props.VL
     let max = Math.max(...props.VL);

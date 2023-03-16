@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useEffect } from "react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import "./Simulation.css";
 import { MathComponent } from "mathjax-react";
 import generateConfigurations from "../utils/SimAlgs/generateConfiguration.js";
@@ -60,6 +60,7 @@ function Simulation() {
     L: L,
     T: T,
     syn: syn,
+    envSyn: envSyn,
     setC: setC,
     setVL: setVL,
     setF: setF,
@@ -69,6 +70,42 @@ function Simulation() {
     setEnvSyn: setEnvSyn,
     setCHist: setCHist,
   };
+
+  useEffect(() => {
+    let storedMatrices = localStorage.getItem("Matrices");
+    let json = storedMatrices !== null ? JSON.parse(storedMatrices) : "";
+    if (json.length !== 0) {
+      setC(json.C);
+      setVL(json.VL);
+      setF(json.F);
+      setL(json.L);
+      setT(json.T);
+      setSyn(json.syn);
+      setEnvSyn(json.envSyn);
+    } else {
+      setC([1, 1, 2]);
+      setVL([1, 1, 2]);
+      setF([
+        [1, 1, 0],
+        [0.5, 0.5, 0],
+        [0, 0, 1],
+        [0, 0, 0.5],
+      ]);
+
+      setL([
+        [1, 0],
+        [1, 0],
+        [0, 1],
+        [0, 1],
+      ]);
+      setT([[4, 4]]);
+      setSyn([
+        [1, 2],
+        [2, 1],
+      ]);
+      setEnvSyn(2);
+    }
+  }, []);
 
   //States for Viewing components
   const {

@@ -31,6 +31,8 @@ function handleLoad(target, props) {
     props.setT(json.T);
     props.setSyn(json.syn);
     props.setEnvSyn(json.envSyn);
+    const matrices = JSON.stringify(json);
+    localStorage.setItem("Matrices", matrices);
   };
   reader.onerror = function () {
     console.log(reader.error);

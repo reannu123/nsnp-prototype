@@ -2,10 +2,9 @@ import * as React from "react";
 import StyledBurgerMenu from "../StyledBurgerMenu/StyledBurgerMenu";
 import "./Settings.css";
 import { slide as BurgerMenu } from "react-burger-menu";
+import useLocalStorage from "../../utils/hooks/useLocalStorage";
 
 export default function ConfigHist(props) {
-  // Remove handlesave from props
-  const { handlesave, ...rest } = props;
   return (
     <BurgerMenu
       left
@@ -30,7 +29,7 @@ export default function ConfigHist(props) {
         <div
           className="ListItem Setting"
           onClick={(e) => {
-            props.itemaction2(rest);
+            props.itemaction2(props);
           }}
         >
           <h4>Save System</h4>
