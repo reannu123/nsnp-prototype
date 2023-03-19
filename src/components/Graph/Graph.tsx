@@ -59,6 +59,18 @@ export default function Graph(props) {
       }
     }
 
+    let storedPositions = localStorage.getItem("positions");
+    if (storedPositions !== null) {
+      let json = JSON.parse(storedPositions);
+      for (let i = 0; i < json.length; i++) {
+        let position = json[i];
+        let node = newElements.find((node) => node.data.id === position.id);
+        if (node !== undefined) {
+          node.position = position.position;
+        }
+      }
+    }
+
     setElements(newElements);
   }
 
@@ -70,7 +82,18 @@ export default function Graph(props) {
   // Create the system when the component is mounted
   useEffect(() => {
     createSystem();
-  }, [props.C]);
+    // cyRef.current.nodes().forEach((node) => {
+    //   if (storedPositions !== null) {
+    //     let json = JSON.parse(storedPositions);
+    //     let position = json.find((pos) => pos.id === node.id());
+    //     if (position !== undefined) {
+    //       node.position(position.position);
+    //     }
+    //   }
+    // });
+
+    //Todo: save the Matrix data and positions of the nodes in local storage
+  }, [props.C, props.VL, props.F, props.L, props.T, props.syn, props.envSyn]);
 
   // Track events on the graph
   useEffect(() => {
@@ -97,15 +120,15 @@ export default function Graph(props) {
 
     // Get the position of all nodes
     cy.on("mouseup", function (event) {
-      let positions = cy.nodes().map((node) => {
+      let positions = cy.nodes().map((node, index) => {
         return {
           id: node.id(),
           position: node.position(),
         };
       });
       // Save positions in local storage
-
-      console.log("Positions: ", positions);
+      console.log(positions);
+      localStorage.setItem("positions", JSON.stringify(positions));
     });
   }, [cyRef]);
 

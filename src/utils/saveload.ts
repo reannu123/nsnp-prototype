@@ -1,6 +1,6 @@
 import saveAs from "file-saver";
 import convert from "xml-js";
-function handleSave(props) {
+function saveSystem(props) {
   const json = {
     C: props.C,
     VL: props.VL,
@@ -9,6 +9,7 @@ function handleSave(props) {
     T: props.T,
     syn: props.syn,
     envSyn: props.envSyn,
+    neuronPositions: props.neuronPositions,
   };
   const xml = JSON.stringify(json);
   console.log(JSON.parse(xml));
@@ -18,7 +19,7 @@ function handleSave(props) {
   saveAs(blob, filename + ".nsnp");
 }
 
-function handleLoad(target, props) {
+function loadSystem(target, props) {
   let file = target.files[0];
   let reader = new FileReader();
   reader.readAsText(file);
@@ -31,6 +32,7 @@ function handleLoad(target, props) {
     props.setT(json.T);
     props.setSyn(json.syn);
     props.setEnvSyn(json.envSyn);
+    props.setNeuronPositions(json.neuronPositions);
     const matrices = JSON.stringify(json);
     localStorage.setItem("Matrices", matrices);
   };
@@ -39,4 +41,4 @@ function handleLoad(target, props) {
   };
 }
 
-export { handleSave, handleLoad };
+export { saveSystem, loadSystem };

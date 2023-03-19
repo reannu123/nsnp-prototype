@@ -16,7 +16,7 @@ import saveAs from "file-saver";
 import convert from "xml-js";
 import { useViewer } from "../utils/hooks/useViewer";
 import { useMatrixData } from "../utils/hooks/useMatrixData";
-import { handleSave, handleLoad } from "../utils/saveload";
+import { saveSystem, loadSystem } from "../utils/saveload";
 
 function Simulation() {
   // Control States
@@ -28,7 +28,7 @@ function Simulation() {
   const [SHist, setSHist] = useState<number[][][]>([]);
   const [PHist, setPHist] = useState<number[][][]>([]);
 
-  // States for the Matrices
+  // States for the System
   const {
     C,
     setC,
@@ -52,7 +52,7 @@ function Simulation() {
     PM,
     setPM,
   } = useMatrixData();
-
+  const [neuronPositions, setNeuronPositions] = useState<number[]>([]);
   let matrixProps = {
     C: C,
     VL: VL,
@@ -61,6 +61,7 @@ function Simulation() {
     T: T,
     syn: syn,
     envSyn: envSyn,
+    neuronPositions: neuronPositions,
     setC: setC,
     setVL: setVL,
     setF: setF,
@@ -69,6 +70,7 @@ function Simulation() {
     setSyn: setSyn,
     setEnvSyn: setEnvSyn,
     setCHist: setCHist,
+    setNeuronPositions: setNeuronPositions,
   };
 
   useEffect(() => {
@@ -170,7 +172,6 @@ function Simulation() {
     setCHist((CHist) => [...CHist, C]);
     setPHist((PHist) => [...PHist, newP]);
     setSHist((SHist) => [...SHist, newS]);
-    //TODO: Add setting of environment value from the node whose id is envSyn
     setEnvValue((envValue) => [...envValue, matrices.finalEnvValue]);
 
     setShowNonSimMatrices(false);
@@ -205,6 +206,7 @@ function Simulation() {
     setCHist(CHist.slice(0, timeSteps - 1));
     setPHist(PHist.slice(0, timeSteps - 1));
     setSHist(SHist.slice(0, timeSteps - 1));
+    setEnvValue(envValue.slice(0, timeSteps - 1));
     setTimeSteps(timeSteps - 1);
   }
 
@@ -221,7 +223,16 @@ function Simulation() {
     setCHist(CHist.slice(0, index));
     setPHist(PHist.slice(0, index));
     setSHist(SHist.slice(0, index));
+    setEnvValue(envValue.slice(0, index));
     setTimeSteps(index);
+  }
+
+  function handleSave(matrixProps) {
+    saveSystem(matrixProps);
+  }
+
+  function handleLoad(target, matrixProps) {
+    loadSystem(target, matrixProps);
   }
 
   return (
