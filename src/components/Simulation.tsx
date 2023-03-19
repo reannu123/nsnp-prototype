@@ -273,13 +273,7 @@ function Simulation() {
 
       {/* Show Graph */}
       {!showNonSimMatrices && showGraph && (
-        <Graph
-          {...matrixProps}
-          envSyn={envSyn}
-          setEnvSyn={setEnvSyn}
-          envValue={envValue}
-          setEnvValue={setEnvValue}
-        />
+        <Graph {...matrixProps} envValue={envValue} setEnvValue={setEnvValue} />
       )}
     </>
   );

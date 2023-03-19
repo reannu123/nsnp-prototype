@@ -8,91 +8,18 @@ import stylesheet from "./stylesheet";
 import NewNodeForm from "../forms/NewNodeForm";
 
 export default function Graph(props) {
+  // Cytoscape reference
   const cyRef = useRef(cytoscape());
   const [elements, setElements] = useState(new Array<ElementDefinition>());
   const [selectedNode, setSelectedNode] = useState<string>("");
 
-  // Show modals
+  // Modal states
   const [showNewNode, setShowNewNode] = useState(false);
-
-  function createSystem() {
-    console.log("Env Syn: " + props.envSyn);
-    let newElements: ElementDefinition[] = [];
-    // get the max value in props.VL
-    let max = Math.max(...props.VL);
-
-    // Loop through the neurons
-    for (let i = 0; i < max + 1; i++) {
-      // Create a neuron for each variable
-      if (i === max) {
-        newElements.push(...createEnvNode(props.envValue, i));
-      } else {
-        newElements.push(
-          ...createNeuron(props.VL, props.C, props.F, props.L, i, props.T)
-        );
-      }
-    }
-
-    // From props.syn, create a list of edges where the source and target are the nodes in the list of nodes
-    for (let i = 0; i < props.syn.length + 1; i++) {
-      if (i === props.syn.length) {
-        newElements.push({
-          data: {
-            id: "Output Edge",
-            source: "Neuron " + props.envSyn,
-            target: "Environment",
-            label: "Output",
-            classes: "edge",
-          },
-        });
-        break;
-      } else {
-        newElements.push({
-          data: {
-            id: "Synapse " + i,
-            source: "Neuron " + props.syn[i][0],
-            target: "Neuron " + props.syn[i][1],
-            label: props.syn[i][2],
-            classes: "edge",
-          },
-        });
-      }
-    }
-
-    let storedPositions = localStorage.getItem("positions");
-    if (storedPositions !== null) {
-      let json = JSON.parse(storedPositions);
-      for (let i = 0; i < json.length; i++) {
-        let position = json[i];
-        let node = newElements.find((node) => node.data.id === position.id);
-        if (node !== undefined) {
-          node.position = position.position;
-        }
-      }
-    }
-
-    setElements(newElements);
-  }
-
-  let layout = {
-    name: "breadthfirst",
-    animate: true,
-  };
 
   // Create the system when the component is mounted
   useEffect(() => {
+    setElements([]);
     createSystem();
-    // cyRef.current.nodes().forEach((node) => {
-    //   if (storedPositions !== null) {
-    //     let json = JSON.parse(storedPositions);
-    //     let position = json.find((pos) => pos.id === node.id());
-    //     if (position !== undefined) {
-    //       node.position(position.position);
-    //     }
-    //   }
-    // });
-
-    //Todo: save the Matrix data and positions of the nodes in local storage
   }, [props.C, props.VL, props.F, props.L, props.T, props.syn, props.envSyn]);
 
   // Track events on the graph
@@ -126,12 +53,87 @@ export default function Graph(props) {
           position: node.position(),
         };
       });
-      // Save positions in local storage
-      console.log(positions);
       localStorage.setItem("positions", JSON.stringify(positions));
+      // print edges
+      let edges = cy.edges().map((edge, index) => {
+        return {
+          id: edge.id(),
+          source: edge.source().id(),
+          target: edge.target().id(),
+        };
+      });
+      console.log(edges);
     });
+    cy.gridGuide({
+      guidelinesStyle: {
+        strokeStyle: "black",
+        horizontalDistColor: "#ff0000",
+        verticalDistColor: "green",
+        initPosAlignmentColor: "#0000ff",
+      },
+    });
+    cy.add(elements);
   }, [cyRef]);
 
+  function createSystem() {
+    let newElements: ElementDefinition[] = [];
+    // get the max value in props.VL
+    let max = Math.max(...props.VL);
+
+    // Loop through the neurons
+    for (let i = 0; i < max + 1; i++) {
+      // Create a neuron for each variable
+      if (i === max) {
+        newElements.push(...createEnvNode(props.envValue, i));
+      } else {
+        newElements.push(
+          ...createNeuron(props.VL, props.C, props.F, props.L, i, props.T)
+        );
+      }
+    }
+
+    // From props.syn, create a list of edges where the source and target are the nodes in the list of nodes
+    let edges = props.syn.map((synapse) => {
+      return {
+        data: {
+          id: "Synapse " + synapse[0] + "-" + synapse[1],
+          source: "Neuron " + synapse[0],
+          target: "Neuron " + synapse[1],
+          label: synapse[2],
+          classes: "edge",
+        },
+      };
+    });
+
+    let outputSource = "Neuron " + props.envSyn;
+    let outputEdge = {
+      data: {
+        id: "Output Edge",
+        source: outputSource,
+        target: "Environment",
+        label: "Output",
+        classes: "edge",
+      },
+    };
+    edges.push(outputEdge);
+    // Add the edges to the list of elements
+    newElements.push(...edges);
+
+    let storedPositions = localStorage.getItem("positions");
+    if (storedPositions !== null) {
+      let json = JSON.parse(storedPositions);
+      for (let i = 0; i < json.length; i++) {
+        let position = json[i];
+        let node = newElements.find((node) => node.data.id === position.id);
+        if (node !== undefined) {
+          node.position = position.position;
+        }
+      }
+    }
+
+    // set elements to newElements
+    setElements(newElements);
+  }
   return (
     <>
       <ButtonBar
@@ -151,7 +153,6 @@ export default function Graph(props) {
         minZoom={0.5}
         maxZoom={2}
         style={{ width: "100vw", height: "100vh" }}
-        layout={layout}
       />
     </>
   );

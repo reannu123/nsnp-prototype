@@ -35,6 +35,7 @@ function loadSystem(target, props) {
     props.setNeuronPositions(json.neuronPositions);
     const matrices = JSON.stringify(json);
     localStorage.setItem("Matrices", matrices);
+    localStorage.setItem("positions", JSON.stringify(json.neuronPositions));
   };
   reader.onerror = function () {
     console.log(reader.error);
