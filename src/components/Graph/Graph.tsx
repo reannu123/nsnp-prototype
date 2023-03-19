@@ -54,15 +54,6 @@ export default function Graph(props) {
         };
       });
       localStorage.setItem("positions", JSON.stringify(positions));
-      // print edges
-      let edges = cy.edges().map((edge, index) => {
-        return {
-          id: edge.id(),
-          source: edge.source().id(),
-          target: edge.target().id(),
-        };
-      });
-      console.log(edges);
     });
     (cy as any).gridGuide({
       guidelinesStyle: {
@@ -72,7 +63,6 @@ export default function Graph(props) {
         initPosAlignmentColor: "#0000ff",
       },
     });
-    cy.add(elements);
   }, [cyRef]);
 
   function createSystem() {
