@@ -98,7 +98,7 @@ export default function Graph(props) {
     let outputSource = "Neuron " + props.envSyn;
     let outputEdge = {
       data: {
-        id: "Output Edge",
+        id: "Synapse " + outputSource + "-Environment",
         source: outputSource,
         target: "Environment",
         label: "Output",
@@ -122,6 +122,7 @@ export default function Graph(props) {
     }
 
     // set elements to newElements
+    console.log(newElements);
     setElements(newElements);
   }
   return (
