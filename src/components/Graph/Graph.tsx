@@ -64,7 +64,7 @@ export default function Graph(props) {
       });
       console.log(edges);
     });
-    cy.gridGuide({
+    (cy as any).gridGuide({
       guidelinesStyle: {
         strokeStyle: "black",
         horizontalDistColor: "#ff0000",
