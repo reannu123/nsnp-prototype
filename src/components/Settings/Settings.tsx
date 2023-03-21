@@ -3,6 +3,7 @@ import StyledBurgerMenu from "../StyledBurgerMenu/StyledBurgerMenu";
 import "./Settings.css";
 import { slide as BurgerMenu } from "react-burger-menu";
 import useLocalStorage from "../../utils/hooks/useLocalStorage";
+import { Link } from "react-router-dom";
 
 export default function ConfigHist(props) {
   return (
@@ -45,7 +46,10 @@ export default function ConfigHist(props) {
           />
         </div>
         <div className="ListItem Setting">
-          <h4>Help</h4>
+          {/* remove link decoration  */}
+          <Link style={{ textDecoration: "none" }} to={"/help"}>
+            <h4>Help</h4>
+          </Link>
         </div>
       </div>
     </BurgerMenu>
